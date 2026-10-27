@@ -3,113 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Meu Inventário</title>
+  <title>Acervo</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Inventário" />
-  <meta name="theme-color" content="#F2F2F7" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Acervo" />
 
-  <!-- Logo embutida para o iOS (Ícone de Caixa) -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230A84FF'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
+  <!-- Logo embutida para o iOS (Ícone Caixa Cinza Premium) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%2348484A'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
 
   <style>
+    /* Variáveis base (Light Mode) */
     :root {
-      --bg-primary: #F2F2F7;
-      --bg-elevated: #FFFFFF;
-      --bg-glass: rgba(242, 242, 247, 0.88);
+      --bg-app: #F2F2F7;
+      --bg-card: #FFFFFF;
+      --bg-glass: rgba(242, 242, 247, 0.85);
+      --bg-segmented: #E5E5EA;
       
-      --primary: #0A84FF;
+      --text-main: #1C1C1E;
+      --text-sub: #8E8E93;
+      
+      --premium-gray: #48484A;
+      --premium-light: #E5E5EA;
+      
       --success: #34C759;
       --danger: #FF3B30;
       
-      --text-primary: #1C1C1E;
-      --text-secondary: #636366;
-      --text-muted: #8E8E93;
-      
-      --border-hairline: rgba(60, 60, 67, 0.14);
-      --border-strong: #D1D1D6;
+      --border: rgba(60, 60, 67, 0.18);
+    }
+
+    /* Dark Mode Automático */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-app: #000000;
+        --bg-card: #1C1C1E;
+        --bg-glass: rgba(0, 0, 0, 0.85);
+        --bg-segmented: #2C2C2E;
+        
+        --text-main: #F2F2F7;
+        --text-sub: #98989D;
+        
+        --premium-gray: #636366;
+        --premium-light: #3A3A3C;
+        
+        --border: rgba(84, 84, 88, 0.65);
+      }
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; -webkit-tap-highlight-color: transparent; }
 
-    body { background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; padding-bottom: 70px; }
+    body { background-color: var(--bg-app); color: var(--text-main); min-height: 100vh; padding-bottom: 70px; transition: background-color 0.3s; }
 
     header {
       position: sticky; top: 0; z-index: 50;
       background: var(--bg-glass);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
-      border-bottom: 0.5px solid var(--border-hairline);
+      border-bottom: 0.5px solid var(--border);
       padding: calc(env(safe-area-inset-top) + 12px) 20px 14px;
     }
 
-    .header-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+    .header-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.5px; }
 
-    /* Controle de Abas Estilo iOS */
+    /* Segmented Control iOS */
     .segmented-control {
-      display: flex; background: #E5E5EA; border-radius: 8px; padding: 2px;
+      display: flex; background: var(--bg-segmented); border-radius: 9px; padding: 2px;
     }
     .segment {
-      flex: 1; text-align: center; padding: 6px 0; font-size: 0.85rem; font-weight: 600;
-      color: var(--text-primary); border-radius: 6px; cursor: pointer;
+      flex: 1; text-align: center; padding: 7px 0; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-main); border-radius: 7px; cursor: pointer; transition: 0.2s;
     }
-    .segment.active { background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .segment.active { background: var(--premium-gray); color: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 
     .container { max-width: 720px; margin: 0 auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; }
 
-    .ios-card {
-      background: var(--bg-elevated); border-radius: 14px; padding: 16px;
-      border: 0.5px solid var(--border-hairline); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    .card {
+      background: var(--bg-card); border-radius: 14px; padding: 18px;
+      border: 0.5px solid var(--border);
     }
 
-    input {
-      width: 100%; height: 42px; padding: 0 12px; font-size: 0.95rem;
-      border: 1px solid var(--border-strong); border-radius: 10px;
-      background: var(--bg-primary); outline: none; margin-bottom: 10px;
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-sub); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    input, select {
+      width: 100%; height: 44px; padding: 0 14px; font-size: 1rem;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg-app); color: var(--text-main); outline: none; margin-bottom: 14px;
       -webkit-appearance: none; appearance: none;
     }
-    input:focus { border-color: var(--primary); background: #FFFFFF; }
-
-    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+    input:focus, select:focus { border-color: var(--premium-gray); }
 
     .btn {
-      width: 100%; height: 42px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
-      cursor: pointer; transition: opacity 0.1s;
+      width: 100%; height: 46px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s, transform 0.1s; display: flex; align-items: center; justify-content: center;
     }
-    .btn:active { opacity: 0.8; }
-    .btn-primary { background: var(--primary); color: #FFF; }
-    .btn-success { background: var(--success); color: #FFF; }
-    .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
-    .btn-sm { height: 32px; font-size: 0.8rem; padding: 0 12px; width: auto; }
+    .btn:active { opacity: 0.8; transform: scale(0.98); }
+    .btn-primary { background: var(--premium-gray); color: #FFFFFF; }
+    .btn-success { background: var(--success); color: #FFFFFF; }
+    .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+    .btn-sm { height: 34px; font-size: 0.85rem; padding: 0 14px; width: auto; border-radius: 8px; }
 
-    .item-list { display: flex; flex-direction: column; gap: 10px; }
+    .item-list { display: flex; flex-direction: column; gap: 12px; }
+    
     .item-card {
-      background: var(--bg-elevated); border-radius: 12px; padding: 14px;
-      border: 0.5px solid var(--border-hairline);
+      background: var(--bg-card); border-radius: 14px; padding: 16px;
+      border: 0.5px solid var(--border); display: flex; flex-direction: column; gap: 10px;
     }
-    .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .item-title { font-size: 1rem; font-weight: 600; }
-    .item-meta { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 10px; }
-    .item-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    
+    .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .item-title { font-size: 1.05rem; font-weight: 600; color: var(--text-main); }
+    
+    .badge {
+      font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px;
+      background: var(--premium-light); color: var(--text-main); text-transform: uppercase;
+    }
 
-    /* Modal de Empréstimo */
+    .item-meta { font-size: 0.85rem; color: var(--text-sub); line-height: 1.5; }
+    .item-meta strong { color: var(--text-main); font-weight: 600; }
+    
+    .item-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+
+    /* Modal iOS Style */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100;
       display: none; align-items: center; justify-content: center; padding: 20px;
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
     }
     .modal-overlay.active { display: flex; }
     .modal-content {
-      background: var(--bg-elevated); width: 100%; max-width: 400px;
-      border-radius: 14px; padding: 20px;
+      background: var(--bg-card); width: 100%; max-width: 360px;
+      border-radius: 16px; padding: 22px; border: 0.5px solid var(--border);
     }
-    .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .modal-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 18px; text-align: center; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
     #toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: var(--text-primary); color: #FFFFFF; padding: 10px 18px;
-      border-radius: 99px; font-size: 0.85rem; font-weight: 600; transition: 0.25s; z-index: 300;
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--text-main); color: var(--bg-app); padding: 12px 22px;
+      border-radius: 99px; font-size: 0.9rem; font-weight: 600; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 300;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); white-space: nowrap;
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
   </style>
@@ -118,7 +149,7 @@
 
   <header>
     <div style="max-width: 720px; margin: 0 auto;">
-      <div class="header-title">📦 Meu Inventário</div>
+      <div class="header-title">📦 Gestão de Acervo</div>
       <div class="segmented-control">
         <div class="segment active" id="tab-casa" onclick="mudarAba('casa')">Em Casa</div>
         <div class="segment" id="tab-fora" onclick="mudarAba('fora')">Emprestados</div>
@@ -127,29 +158,42 @@
   </header>
 
   <div class="container">
-    <!-- Adicionar Novo Item -->
-    <div class="ios-card" id="card-adicionar" style="display: block;">
-      <label>Adicionar item ao acervo</label>
-      <input type="text" id="novoItemNome" placeholder="Ex: Furadeira, Jogo Domínio..." />
-      <button class="btn btn-primary" onclick="adicionarItem()">+ Cadastrar Item</button>
+    
+    <!-- Formulário de Cadastro -->
+    <div class="card" id="card-adicionar">
+      <label>Novo Item no Acervo</label>
+      <input type="text" id="novoItemNome" placeholder="Ex: Furadeira, Jogo Domínio..." autocomplete="off" />
+      
+      <select id="novoItemCat">
+        <option value="Ferramenta">🔨 Ferramenta</option>
+        <option value="Jogo">🎲 Jogo de Tabuleiro</option>
+        <option value="Eletrônico">🔌 Eletrônico</option>
+        <option value="Livro">📚 Livro</option>
+        <option value="Outros" selected>📦 Outros</option>
+      </select>
+      
+      <button class="btn btn-primary" onclick="adicionarItem()">Cadastrar Item</button>
     </div>
 
-    <!-- Lista de Itens -->
+    <!-- Lista -->
     <div class="item-list" id="listaItens"></div>
+
   </div>
 
-  <!-- Modal Emprestar -->
+  <!-- Modal de Empréstimo -->
   <div class="modal-overlay" id="modalEmprestar">
     <div class="modal-content">
-      <div class="modal-title">Emprestar Item</div>
-      <label>Para quem você está emprestando?</label>
-      <input type="text" id="empNome" placeholder="Nome da pessoa" />
+      <div class="modal-title">Registrar Saída</div>
+      
+      <label>Para quem?</label>
+      <input type="text" id="empNome" placeholder="Nome da pessoa" autocomplete="off" />
+      
       <label>Data de saída</label>
       <input type="date" id="empData" />
       
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
-        <button class="btn btn-primary" onclick="confirmarEmprestimo()">Emprestar</button>
+        <button class="btn btn-primary" onclick="confirmarEmprestimo()">Salvar</button>
       </div>
     </div>
   </div>
@@ -157,12 +201,12 @@
   <div id="toast">Ação concluída!</div>
 
   <script>
-    const STORAGE_KEY = 'inventario_offline_v1';
+    const STORAGE_KEY = 'acervo_premium_v1';
     let inventario = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let abaAtual = 'casa';
     let itemEmEdicao = null;
 
-    // Seta data de hoje no modal
+    // Data de hoje padrão
     document.getElementById('empData').value = new Date().toISOString().split('T')[0];
 
     function salvar() {
@@ -172,18 +216,22 @@
 
     function adicionarItem() {
       const nome = document.getElementById('novoItemNome').value.trim();
+      const cat = document.getElementById('novoItemCat').value;
+      
       if (!nome) { mostrarToast('⚠️ Digite o nome do item'); return; }
 
       inventario.unshift({
         id: Date.now().toString(),
         nome: nome,
-        status: 'casa', // 'casa' ou 'emprestado'
-        historico: []
+        categoria: cat,
+        status: 'casa'
       });
 
       document.getElementById('novoItemNome').value = '';
+      document.getElementById('novoItemCat').value = 'Outros';
+      
       salvar();
-      mostrarToast('✅ Item cadastrado no acervo!');
+      mostrarToast('✅ Item cadastrado!');
     }
 
     function mudarAba(aba) {
@@ -219,31 +267,24 @@
         
         salvar();
         fecharModal();
-        mostrarToast('📤 Item marcado como emprestado!');
+        mostrarToast('📤 Registrado como emprestado');
       }
     }
 
     function receberItem(id) {
       const item = inventario.find(i => i.id === id);
       if (item) {
-        // Salva no histórico se quiser manter registro futuro
-        item.historico.push({
-          para: item.emprestadoPara,
-          saida: item.dataSaida,
-          devolucao: new Date().toISOString().split('T')[0]
-        });
-        
         item.status = 'casa';
         delete item.emprestadoPara;
         delete item.dataSaida;
         
         salvar();
-        mostrarToast('📥 Item devolvido ao acervo!');
+        mostrarToast('📥 Item voltou para casa');
       }
     }
 
     function apagarItem(id) {
-      if(confirm('Apagar este item definitivamente do inventário?')) {
+      if(confirm('Tem certeza que deseja remover este item do acervo?')) {
         inventario = inventario.filter(i => i.id !== id);
         salvar();
         mostrarToast('🗑️ Item removido');
@@ -261,7 +302,7 @@
       const filtrados = inventario.filter(i => abaAtual === 'casa' ? i.status === 'casa' : i.status === 'emprestado');
 
       if (filtrados.length === 0) {
-        lista.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 20px;">Nenhum item nesta lista.</p>`;
+        lista.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding: 30px 0; font-size: 0.95rem;">Nenhum item encontrado.</p>`;
         return;
       }
 
@@ -269,19 +310,20 @@
         <div class="item-card">
           <div class="item-header">
             <span class="item-title">${item.nome}</span>
+            <span class="badge">${item.categoria}</span>
           </div>
           
           ${item.status === 'emprestado' ? `
             <div class="item-meta">
               <strong>Com:</strong> ${item.emprestadoPara}<br/>
-              <strong>Saiu em:</strong> ${formatarData(item.dataSaida)}
+              <strong>Data de Saída:</strong> ${formatarData(item.dataSaida)}
             </div>
             <div class="item-actions">
               <button class="btn btn-success btn-sm" onclick="receberItem('${item.id}')">Marcar Devolvido</button>
             </div>
           ` : `
             <div class="item-actions">
-              <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--border-strong);" onclick="apagarItem('${item.id}')">Excluir</button>
+              <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--border);" onclick="apagarItem('${item.id}')">Excluir</button>
               <button class="btn btn-primary btn-sm" onclick="abrirModalEmprestar('${item.id}')">Emprestar</button>
             </div>
           `}
