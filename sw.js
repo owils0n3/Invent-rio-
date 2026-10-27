@@ -1,4 +1,4 @@
-const CACHE_NAME = 'inventario-wilson-v4';
+const CACHE_NAME = 'inventario-wilson-v5';
 const assetsToCache = [
   './',
   './index.html'
