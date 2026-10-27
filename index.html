@@ -3,25 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Acervo Pessoal</title>
+  <title>Inventário Wilson</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Acervo" />
+  <meta name="apple-mobile-web-app-title" content="Inventário Wilson" />
   <meta name="theme-color" content="#F3F4F6" />
 
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231E293B'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
 
   <style>
     :root {
-      --bg-app: #F3F4F6; /* Cinza gelo limpo */
+      --bg-app: #F3F4F6;
       --bg-card: #FFFFFF;
       --text-main: #1F2937;
       --text-sub: #6B7280;
       
-      --primary: #2563EB; /* Azul vibrante financeiro */
-      --primary-hover: #1D4ED8;
-      --dark-accent: #1E293B; /* Cinza chumbo/marinho */
+      --primary: #2563EB;
+      --dark-accent: #1E293B;
       
       --success: #10B981;
       --danger: #EF4444;
@@ -80,6 +79,7 @@
     .btn-success { background: var(--success); color: #FFFFFF; }
     .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
     .btn-sm { height: 36px; font-size: 0.85rem; padding: 0 16px; width: auto; border-radius: 8px; }
+    .btn-icon { width: 46px; height: 46px; padding: 0; font-size: 1.2rem; }
 
     /* Estrutura das Caixas de Categoria */
     .category-box {
@@ -128,7 +128,7 @@
 
     .item-actions { display: flex; gap: 8px; }
 
-    /* Modal */
+    /* Modal Genérico */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 100;
       display: none; align-items: center; justify-content: center; padding: 20px;
@@ -142,6 +142,15 @@
     .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--dark-accent); }
     .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
 
+    /* Lista de Categorias no Modal */
+    .cat-list-modal {
+      display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; margin-bottom: 16px;
+    }
+    .cat-item-modal {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+    }
+
     #toast {
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
       background: var(--dark-accent); color: #FFFFFF; padding: 14px 24px;
@@ -150,14 +159,14 @@
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
     
-    .flex-row { display: flex; gap: 10px; align-items: flex-start; }
+    .flex-row { display: flex; gap: 8px; align-items: flex-start; }
   </style>
 </head>
 <body>
 
   <header>
     <div style="max-width: 720px; margin: 0 auto;">
-      <div class="header-title">📦 Controle de Acervo</div>
+      <div class="header-title">📦 Inventário Wilson</div>
       <div class="segmented-control">
         <div class="segment active" id="tab-casa" onclick="mudarAba('casa')">Em Casa</div>
         <div class="segment" id="tab-fora" onclick="mudarAba('fora')">Emprestados</div>
@@ -169,7 +178,7 @@
     
     <!-- Painel de Cadastro -->
     <div class="card" id="card-adicionar">
-      <label>Novo Item</label>
+      <label>Item</label>
       <input type="text" id="novoItemNome" placeholder="O que você quer guardar?" autocomplete="off" />
       
       <label>Categoria</label>
@@ -177,7 +186,8 @@
         <select id="selectCategoria" style="flex: 1;">
           <option value="" disabled selected>Selecione ou crie...</option>
         </select>
-        <button class="btn btn-outline" style="width: auto; padding: 0 16px; height: 46px;" onclick="criarNovaCategoria()">+ Criar</button>
+        <button class="btn btn-outline" style="width: auto; padding: 0 14px; height: 46px;" onclick="criarNovaCategoria()" title="Criar Nova">+ Criar</button>
+        <button class="btn btn-outline btn-icon" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias">⚙️</button>
       </div>
       
       <button class="btn btn-dark" onclick="adicionarItem()">Adicionar ao Acervo</button>
@@ -200,21 +210,37 @@
       <input type="date" id="empData" />
       
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+        <button class="btn btn-outline" onclick="fecharModalEmprestar()">Cancelar</button>
         <button class="btn btn-primary" onclick="confirmarEmprestimo()">Registrar Saída</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Gerenciar Categorias -->
+  <div class="modal-overlay" id="modalCategorias">
+    <div class="modal-content">
+      <div class="modal-title">Gerenciar Categorias</div>
+      
+      <div class="cat-list-modal" id="listaCategoriasModal">
+        <!-- Renderizado via JS -->
+      </div>
+      
+      <button class="btn btn-dark" onclick="fecharModalGerenciarCategorias()">Pronto</button>
     </div>
   </div>
 
   <div id="toast">Ação concluída!</div>
 
   <script>
-    const STORAGE_ITENS = 'acervo_itens_v2';
-    const STORAGE_CATS = 'acervo_categorias_v2';
+    const STORAGE_ITENS = 'acervo_itens_v3';
+    const STORAGE_CATS = 'acervo_categorias_v3';
     
+    // Inicia com 'Geral' se não houver categorias
     let inventario = JSON.parse(localStorage.getItem(STORAGE_ITENS)) || [];
     let categorias = JSON.parse(localStorage.getItem(STORAGE_CATS)) || ['Geral'];
     
+    if (categorias.length === 0) categorias = ['Geral'];
+
     let abaAtual = 'casa';
     let itemEmEdicao = null;
 
@@ -243,6 +269,8 @@
       }
     }
 
+    /* ---- FUNÇÕES DE CATEGORIA (CRIAR, EDITAR, EXCLUIR) ---- */
+    
     function criarNovaCategoria() {
       const nova = prompt('Digite o nome da nova categoria:');
       if (nova && nova.trim() !== '') {
@@ -257,6 +285,87 @@
         }
       }
     }
+
+    function abrirModalGerenciarCategorias() {
+      renderizarListaCategoriasModal();
+      document.getElementById('modalCategorias').classList.add('active');
+    }
+
+    function fecharModalGerenciarCategorias() {
+      document.getElementById('modalCategorias').classList.remove('active');
+    }
+
+    function renderizarListaCategoriasModal() {
+      const container = document.getElementById('listaCategoriasModal');
+      container.innerHTML = categorias.map((cat, index) => `
+        <div class="cat-item-modal">
+          <span style="font-weight: 600; font-size: 0.95rem; color: var(--text-main);">${cat}</span>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn btn-outline btn-sm" onclick="editarCategoria(${index})" title="Renomear">✏️</button>
+            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--border);" onclick="excluirCategoria(${index})" title="Excluir">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function editarCategoria(index) {
+      const catAntiga = categorias[index];
+      const nova = prompt(`Renomear categoria "${catAntiga}" para:`, catAntiga);
+      
+      if (nova && nova.trim() !== '' && nova.trim() !== catAntiga) {
+        const novaFormatada = nova.trim();
+        
+        if (categorias.includes(novaFormatada)) {
+          mostrarToast('⚠️ Uma categoria com esse nome já existe!');
+          return;
+        }
+
+        // Atualiza o nome da categoria no array
+        categorias[index] = novaFormatada;
+        
+        // Atualiza o nome da categoria em todos os itens que pertenciam a ela
+        inventario.forEach(item => {
+          if (item.categoria === catAntiga) {
+            item.categoria = novaFormatada;
+          }
+        });
+
+        salvarDados();
+        renderizarListaCategoriasModal(); // Atualiza modal
+        mostrarToast('✏️ Categoria renomeada!');
+      }
+    }
+
+    function excluirCategoria(index) {
+      const cat = categorias[index];
+      
+      if (cat === 'Geral') {
+        mostrarToast('⚠️ A categoria "Geral" é padrão e não pode ser excluída.');
+        return;
+      }
+
+      if (confirm(`Tem certeza que deseja excluir a categoria "${cat}"?\n\n(Os itens que estão nela serão movidos para "Geral")`)) {
+        categorias.splice(index, 1);
+        
+        // Garante que 'Geral' exista
+        if (!categorias.includes('Geral')) {
+          categorias.unshift('Geral');
+        }
+
+        // Move os itens para Geral
+        inventario.forEach(item => {
+          if (item.categoria === cat) {
+            item.categoria = 'Geral';
+          }
+        });
+
+        salvarDados();
+        renderizarListaCategoriasModal();
+        mostrarToast('🗑️ Categoria excluída!');
+      }
+    }
+
+    /* ---- FUNÇÕES DOS ITENS (ACERVO) ---- */
 
     function adicionarItem() {
       const nome = document.getElementById('novoItemNome').value.trim();
@@ -362,7 +471,7 @@
       document.getElementById('modalEmprestar').classList.add('active');
     }
 
-    function fecharModal() {
+    function fecharModalEmprestar() {
       document.getElementById('modalEmprestar').classList.remove('active');
       itemEmEdicao = null;
     }
@@ -380,7 +489,7 @@
         item.dataSaida = data;
         
         salvarDados();
-        fecharModal();
+        fecharModalEmprestar();
         mostrarToast('📤 Item emprestado!');
       }
     }
@@ -397,10 +506,10 @@
     }
 
     function apagarItem(id) {
-      if(confirm('Apagar este item definitivamente?')) {
+      if(confirm('Apagar este item definitivamente do inventário?')) {
         inventario = inventario.filter(i => i.id !== id);
         salvarDados();
-        mostrarToast('🗑️ Removido');
+        mostrarToast('🗑️ Item removido');
       }
     }
 
