@@ -1,4 +1,4 @@
-const CACHE_NAME = 'inventario-offline-v1';
+const CACHE_NAME = 'acervo-premium-v1';
 const assetsToCache = [
   './',
   './index.html'
