@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Meu Inventário</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Inventário" />
+  <meta name="theme-color" content="#F2F2F7" />
+
+  <!-- Logo embutida para o iOS (Ícone de Caixa) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230A84FF'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
+
+  <style>
+    :root {
+      --bg-primary: #F2F2F7;
+      --bg-elevated: #FFFFFF;
+      --bg-glass: rgba(242, 242, 247, 0.88);
+      
+      --primary: #0A84FF;
+      --success: #34C759;
+      --danger: #FF3B30;
+      
+      --text-primary: #1C1C1E;
+      --text-secondary: #636366;
+      --text-muted: #8E8E93;
+      
+      --border-hairline: rgba(60, 60, 67, 0.14);
+      --border-strong: #D1D1D6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body { background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; padding-bottom: 70px; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--bg-glass);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid var(--border-hairline);
+      padding: calc(env(safe-area-inset-top) + 12px) 20px 14px;
+    }
+
+    .header-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+
+    /* Controle de Abas Estilo iOS */
+    .segmented-control {
+      display: flex; background: #E5E5EA; border-radius: 8px; padding: 2px;
+    }
+    .segment {
+      flex: 1; text-align: center; padding: 6px 0; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-primary); border-radius: 6px; cursor: pointer;
+    }
+    .segment.active { background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .ios-card {
+      background: var(--bg-elevated); border-radius: 14px; padding: 16px;
+      border: 0.5px solid var(--border-hairline); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+
+    input {
+      width: 100%; height: 42px; padding: 0 12px; font-size: 0.95rem;
+      border: 1px solid var(--border-strong); border-radius: 10px;
+      background: var(--bg-primary); outline: none; margin-bottom: 10px;
+      -webkit-appearance: none; appearance: none;
+    }
+    input:focus { border-color: var(--primary); background: #FFFFFF; }
+
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+
+    .btn {
+      width: 100%; height: 42px; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.1s;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: var(--primary); color: #FFF; }
+    .btn-success { background: var(--success); color: #FFF; }
+    .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
+    .btn-sm { height: 32px; font-size: 0.8rem; padding: 0 12px; width: auto; }
+
+    .item-list { display: flex; flex-direction: column; gap: 10px; }
+    .item-card {
+      background: var(--bg-elevated); border-radius: 12px; padding: 14px;
+      border: 0.5px solid var(--border-hairline);
+    }
+    .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .item-title { font-size: 1rem; font-weight: 600; }
+    .item-meta { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 10px; }
+    .item-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    /* Modal de Empréstimo */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: var(--bg-elevated); width: 100%; max-width: 400px;
+      border-radius: 14px; padding: 20px;
+    }
+    .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--text-primary); color: #FFFFFF; padding: 10px 18px;
+      border-radius: 99px; font-size: 0.85rem; font-weight: 600; transition: 0.25s; z-index: 300;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="max-width: 720px; margin: 0 auto;">
+      <div class="header-title">📦 Meu Inventário</div>
+      <div class="segmented-control">
+        <div class="segment active" id="tab-casa" onclick="mudarAba('casa')">Em Casa</div>
+        <div class="segment" id="tab-fora" onclick="mudarAba('fora')">Emprestados</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Adicionar Novo Item -->
+    <div class="ios-card" id="card-adicionar" style="display: block;">
+      <label>Adicionar item ao acervo</label>
+      <input type="text" id="novoItemNome" placeholder="Ex: Furadeira, Jogo Domínio..." />
+      <button class="btn btn-primary" onclick="adicionarItem()">+ Cadastrar Item</button>
+    </div>
+
+    <!-- Lista de Itens -->
+    <div class="item-list" id="listaItens"></div>
+  </div>
+
+  <!-- Modal Emprestar -->
+  <div class="modal-overlay" id="modalEmprestar">
+    <div class="modal-content">
+      <div class="modal-title">Emprestar Item</div>
+      <label>Para quem você está emprestando?</label>
+      <input type="text" id="empNome" placeholder="Nome da pessoa" />
+      <label>Data de saída</label>
+      <input type="date" id="empData" />
+      
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="confirmarEmprestimo()">Emprestar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Ação concluída!</div>
+
+  <script>
+    const STORAGE_KEY = 'inventario_offline_v1';
+    let inventario = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let abaAtual = 'casa';
+    let itemEmEdicao = null;
+
+    // Seta data de hoje no modal
+    document.getElementById('empData').value = new Date().toISOString().split('T')[0];
+
+    function salvar() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(inventario));
+      renderizar();
+    }
+
+    function adicionarItem() {
+      const nome = document.getElementById('novoItemNome').value.trim();
+      if (!nome) { mostrarToast('⚠️ Digite o nome do item'); return; }
+
+      inventario.unshift({
+        id: Date.now().toString(),
+        nome: nome,
+        status: 'casa', // 'casa' ou 'emprestado'
+        historico: []
+      });
+
+      document.getElementById('novoItemNome').value = '';
+      salvar();
+      mostrarToast('✅ Item cadastrado no acervo!');
+    }
+
+    function mudarAba(aba) {
+      abaAtual = aba;
+      document.getElementById('tab-casa').classList.toggle('active', aba === 'casa');
+      document.getElementById('tab-fora').classList.toggle('active', aba === 'fora');
+      document.getElementById('card-adicionar').style.display = aba === 'casa' ? 'block' : 'none';
+      renderizar();
+    }
+
+    function abrirModalEmprestar(id) {
+      itemEmEdicao = id;
+      document.getElementById('empNome').value = '';
+      document.getElementById('modalEmprestar').classList.add('active');
+    }
+
+    function fecharModal() {
+      document.getElementById('modalEmprestar').classList.remove('active');
+      itemEmEdicao = null;
+    }
+
+    function confirmarEmprestimo() {
+      const pessoa = document.getElementById('empNome').value.trim();
+      const data = document.getElementById('empData').value;
+
+      if (!pessoa || !data) { mostrarToast('⚠️ Preencha nome e data'); return; }
+
+      const item = inventario.find(i => i.id === itemEmEdicao);
+      if (item) {
+        item.status = 'emprestado';
+        item.emprestadoPara = pessoa;
+        item.dataSaida = data;
+        
+        salvar();
+        fecharModal();
+        mostrarToast('📤 Item marcado como emprestado!');
+      }
+    }
+
+    function receberItem(id) {
+      const item = inventario.find(i => i.id === id);
+      if (item) {
+        // Salva no histórico se quiser manter registro futuro
+        item.historico.push({
+          para: item.emprestadoPara,
+          saida: item.dataSaida,
+          devolucao: new Date().toISOString().split('T')[0]
+        });
+        
+        item.status = 'casa';
+        delete item.emprestadoPara;
+        delete item.dataSaida;
+        
+        salvar();
+        mostrarToast('📥 Item devolvido ao acervo!');
+      }
+    }
+
+    function apagarItem(id) {
+      if(confirm('Apagar este item definitivamente do inventário?')) {
+        inventario = inventario.filter(i => i.id !== id);
+        salvar();
+        mostrarToast('🗑️ Item removido');
+      }
+    }
+
+    function formatarData(dataIso) {
+      if (!dataIso) return '';
+      const [a, m, d] = dataIso.split('-');
+      return `${d}/${m}/${a}`;
+    }
+
+    function renderizar() {
+      const lista = document.getElementById('listaItens');
+      const filtrados = inventario.filter(i => abaAtual === 'casa' ? i.status === 'casa' : i.status === 'emprestado');
+
+      if (filtrados.length === 0) {
+        lista.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 20px;">Nenhum item nesta lista.</p>`;
+        return;
+      }
+
+      lista.innerHTML = filtrados.map(item => `
+        <div class="item-card">
+          <div class="item-header">
+            <span class="item-title">${item.nome}</span>
+          </div>
+          
+          ${item.status === 'emprestado' ? `
+            <div class="item-meta">
+              <strong>Com:</strong> ${item.emprestadoPara}<br/>
+              <strong>Saiu em:</strong> ${formatarData(item.dataSaida)}
+            </div>
+            <div class="item-actions">
+              <button class="btn btn-success btn-sm" onclick="receberItem('${item.id}')">Marcar Devolvido</button>
+            </div>
+          ` : `
+            <div class="item-actions">
+              <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--border-strong);" onclick="apagarItem('${item.id}')">Excluir</button>
+              <button class="btn btn-primary btn-sm" onclick="abrirModalEmprestar('${item.id}')">Emprestar</button>
+            </div>
+          `}
+        </div>
+      `).join('');
+    }
+
+    let toastT;
+    function mostrarToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastT);
+      toastT = setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    renderizar();
+  </script>
+</body>
+</html>
