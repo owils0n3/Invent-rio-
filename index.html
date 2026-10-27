@@ -10,23 +10,24 @@
   <meta name="apple-mobile-web-app-title" content="Inventário" />
   <meta name="theme-color" content="#F3F4F6" />
 
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231E293B'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231C1C1E'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
 
   <style>
     :root {
       --bg-app: #F3F4F6;
       --bg-card: #FFFFFF;
-      --text-main: #000000;
+      --text-main: #1C1C1E;
       --text-sub: #8E8E93;
       
-      --primary: #007AFF; /* Azul nativo do iOS */
-      --primary-hover: #0056b3;
-      --dark-accent: #1C1C1E;
+      /* Paleta Cinza Premium (Finanças) */
+      --primary: #48484A; 
+      --dark-accent: #1C1C1E; 
+      --light-accent: rgba(72, 72, 74, 0.12);
       
       --success: #34C759;
       --danger: #FF3B30;
       
-      --border: rgba(60, 60, 67, 0.13);
+      --border: rgba(60, 60, 67, 0.15);
       --shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     }
 
@@ -42,7 +43,6 @@
       padding: calc(env(safe-area-inset-top) + 12px) 20px 14px;
     }
 
-    /* Título sofisticado estilo Apple Large Title */
     .header-title { 
       font-size: 1.6rem; 
       font-weight: 800; 
@@ -58,7 +58,7 @@
       flex: 1; text-align: center; padding: 7px 0; font-size: 0.85rem; font-weight: 600;
       color: var(--text-main); border-radius: 7px; cursor: pointer; transition: 0.2s;
     }
-    .segment.active { background: var(--bg-card); color: var(--text-main); box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04); }
+    .segment.active { background: var(--bg-card); color: var(--dark-accent); box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04); }
 
     .container { max-width: 720px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -82,10 +82,11 @@
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.15s;
     }
     .btn:active { opacity: 0.7; transform: scale(0.97); }
-    .btn-primary { background: var(--primary); color: #FFFFFF; }
+    
+    /* Botões Escuros (Cinza Chumbo) */
     .btn-dark { background: var(--dark-accent); color: #FFFFFF; }
     .btn-success { background: var(--success); color: #FFFFFF; }
-    .btn-outline { background: transparent; color: var(--primary); border: 1px solid rgba(0, 122, 255, 0.3); }
+    .btn-outline { background: transparent; color: var(--dark-accent); border: 1px solid var(--border); }
     .btn-sm { height: 34px; font-size: 0.85rem; padding: 0 14px; width: auto; border-radius: 8px; }
     .btn-icon { width: 46px; height: 46px; padding: 0; font-size: 1.2rem; }
 
@@ -112,9 +113,9 @@
     .item-meta strong { color: var(--text-main); font-weight: 500; }
     .item-actions { display: flex; gap: 8px; }
 
-    /* Novo visual sofisticado para os Modais */
+    /* Modais */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.25); z-index: 100;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.3); z-index: 100;
       display: none; align-items: center; justify-content: center; padding: 20px;
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       opacity: 0; transition: opacity 0.2s ease;
@@ -130,10 +131,8 @@
     .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-main); text-align: center; letter-spacing: -0.5px; }
     .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
 
-    /* Modal de Input de Texto sobreposto (z-index maior) */
     #modalTexto { z-index: 150; }
 
-    /* Lista de Categorias no Modal */
     .cat-list-modal {
       display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; margin-bottom: 16px;
     }
@@ -145,7 +144,7 @@
 
     #toast {
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: rgba(30, 30, 30, 0.95); color: #FFFFFF; padding: 14px 24px;
+      background: rgba(28, 28, 30, 0.95); color: #FFFFFF; padding: 14px 24px;
       border-radius: 99px; font-size: 0.95rem; font-weight: 600; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 300;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); white-space: nowrap; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
@@ -178,14 +177,14 @@
         <select id="selectCategoria" style="flex: 1;">
           <option value="" disabled selected>Selecione ou crie...</option>
         </select>
-        <button class="btn btn-outline" style="width: auto; padding: 0 16px; height: 46px; border: none; background: rgba(0, 122, 255, 0.1);" onclick="criarNovaCategoria()" title="Criar Nova">+ Criar</button>
-        <button class="btn btn-outline btn-icon" style="border: none; background: rgba(0, 122, 255, 0.1);" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias">⚙️</button>
+        <button class="btn btn-outline" style="width: auto; padding: 0 16px; height: 46px; border: none; background: var(--light-accent); color: var(--dark-accent);" onclick="criarNovaCategoria()" title="Criar Nova">+ Criar</button>
+        <button class="btn btn-outline btn-icon" style="border: none; background: var(--light-accent); color: var(--dark-accent);" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias">⚙️</button>
       </div>
       
-      <button class="btn btn-primary" onclick="adicionarItem()">Adicionar ao Acervo</button>
+      <button class="btn btn-dark" onclick="adicionarItem()">Adicionar ao Acervo</button>
     </div>
 
-    <!-- Área onde as categorias e itens serão renderizados -->
+    <!-- Área de Itens -->
     <div id="areaAcervo" style="display: flex; flex-direction: column; gap: 20px;"></div>
 
   </div>
@@ -202,8 +201,8 @@
       <input type="date" id="empData" />
       
       <div class="modal-actions">
-        <button class="btn btn-outline" style="border-color: var(--border); color: var(--text-main);" onclick="fecharModalEmprestar()">Cancelar</button>
-        <button class="btn btn-primary" onclick="confirmarEmprestimo()">Registrar Saída</button>
+        <button class="btn btn-outline" onclick="fecharModalEmprestar()">Cancelar</button>
+        <button class="btn btn-dark" onclick="confirmarEmprestimo()">Registrar Saída</button>
       </div>
     </div>
   </div>
@@ -213,18 +212,18 @@
     <div class="modal-content">
       <div class="modal-title">Gerenciar Categorias</div>
       <div class="cat-list-modal" id="listaCategoriasModal"></div>
-      <button class="btn btn-primary" onclick="fecharModalGerenciarCategorias()">Concluído</button>
+      <button class="btn btn-dark" onclick="fecharModalGerenciarCategorias()">Concluído</button>
     </div>
   </div>
 
-  <!-- NOVO: Modal Customizado para Texto (Substitui o prompt feio) -->
+  <!-- Modal Customizado para Texto -->
   <div class="modal-overlay" id="modalTexto">
     <div class="modal-content">
       <div class="modal-title" id="modalTextoTitulo">Título</div>
       <input type="text" id="modalTextoInput" autocomplete="off" />
       <div class="modal-actions">
-        <button class="btn btn-outline" style="border-color: var(--border); color: var(--text-main);" onclick="fecharModalTexto()">Cancelar</button>
-        <button class="btn btn-primary" onclick="confirmarModalTexto()">Salvar</button>
+        <button class="btn btn-outline" onclick="fecharModalTexto()">Cancelar</button>
+        <button class="btn btn-dark" onclick="confirmarModalTexto()">Salvar</button>
       </div>
     </div>
   </div>
@@ -232,8 +231,8 @@
   <div id="toast">Ação concluída!</div>
 
   <script>
-    const STORAGE_ITENS = 'acervo_itens_v4';
-    const STORAGE_CATS = 'acervo_categorias_v4';
+    const STORAGE_ITENS = 'acervo_itens_v5';
+    const STORAGE_CATS = 'acervo_categorias_v5';
     
     let inventario = JSON.parse(localStorage.getItem(STORAGE_ITENS)) || [];
     let categorias = JSON.parse(localStorage.getItem(STORAGE_CATS)) || ['Geral'];
@@ -265,7 +264,6 @@
       else if (categorias.length > 0) select.value = categorias[0];
     }
 
-    /* ---- LÓGICA DO NOVO MODAL DE TEXTO (SUBSTITUI PROMPT) ---- */
     function abrirModalTexto(titulo, placeholder, valorAtual, callback) {
       document.getElementById('modalTextoTitulo').textContent = titulo;
       const input = document.getElementById('modalTextoInput');
@@ -288,7 +286,6 @@
       fecharModalTexto();
     }
 
-    /* ---- CATEGORIAS ---- */
     function criarNovaCategoria() {
       abrirModalTexto('Nova Categoria', 'Nome da categoria', '', (nova) => {
         if (nova && nova.trim() !== '') {
@@ -320,7 +317,7 @@
         <div class="cat-item-modal">
           <span>${cat}</span>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-outline btn-sm" style="border:none; background:rgba(0,122,255,0.1);" onclick="editarCategoria(${index})" title="Renomear">✏️</button>
+            <button class="btn btn-outline btn-sm" style="border:none; background:var(--light-accent); color:var(--dark-accent);" onclick="editarCategoria(${index})" title="Renomear">✏️</button>
             <button class="btn btn-outline btn-sm" style="border:none; color:var(--danger); background:rgba(255,59,48,0.1);" onclick="excluirCategoria(${index})" title="Excluir">🗑️</button>
           </div>
         </div>
@@ -361,7 +358,6 @@
       }
     }
 
-    /* ---- ITENS ---- */
     function adicionarItem() {
       const nome = document.getElementById('novoItemNome').value.trim();
       const cat = document.getElementById('selectCategoria').value;
@@ -410,7 +406,7 @@
                   <div class="item-info"><div class="item-title">${item.nome}</div></div>
                   <div class="item-actions">
                     <button class="btn btn-outline btn-sm" style="border:none; color:var(--danger); background:rgba(255,59,48,0.1);" onclick="apagarItem('${item.id}')">Excluir</button>
-                    <button class="btn btn-outline btn-sm" style="border:none; color:var(--primary); background:rgba(0,122,255,0.1);" onclick="abrirModalEmprestar('${item.id}')">Emprestar</button>
+                    <button class="btn btn-outline btn-sm" style="border:none; color:var(--dark-accent); background:var(--light-accent);" onclick="abrirModalEmprestar('${item.id}')">Emprestar</button>
                   </div>
                 </div>
               `;
