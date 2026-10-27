@@ -7,7 +7,7 @@
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Inventário Wilson" />
+  <meta name="apple-mobile-web-app-title" content="Inventário" />
   <meta name="theme-color" content="#F3F4F6" />
 
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231E293B'/%3E%3Ctext x='50%25' y='54%25' font-size='260' text-anchor='middle' dominant-baseline='middle'%3E📦%3C/text%3E%3C/svg%3E">
@@ -16,41 +16,49 @@
     :root {
       --bg-app: #F3F4F6;
       --bg-card: #FFFFFF;
-      --text-main: #1F2937;
-      --text-sub: #6B7280;
+      --text-main: #000000;
+      --text-sub: #8E8E93;
       
-      --primary: #2563EB;
-      --dark-accent: #1E293B;
+      --primary: #007AFF; /* Azul nativo do iOS */
+      --primary-hover: #0056b3;
+      --dark-accent: #1C1C1E;
       
-      --success: #10B981;
-      --danger: #EF4444;
+      --success: #34C759;
+      --danger: #FF3B30;
       
-      --border: #E5E7EB;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --border: rgba(60, 60, 67, 0.13);
+      --shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif; -webkit-tap-highlight-color: transparent; }
 
-    body { background-color: var(--bg-app); color: var(--text-main); min-height: 100vh; padding-bottom: 70px; }
+    body { background-color: var(--bg-app); color: var(--text-main); min-height: 100vh; padding-bottom: 70px; -webkit-font-smoothing: antialiased; }
 
     header {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(243, 244, 246, 0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: calc(env(safe-area-inset-top) + 16px) 20px 16px;
+      padding: calc(env(safe-area-inset-top) + 12px) 20px 14px;
     }
 
-    .header-title { font-size: 1.25rem; font-weight: 700; color: var(--dark-accent); margin-bottom: 16px; }
+    /* Título sofisticado estilo Apple Large Title */
+    .header-title { 
+      font-size: 1.6rem; 
+      font-weight: 800; 
+      color: var(--text-main); 
+      margin-bottom: 14px; 
+      letter-spacing: -0.8px; 
+    }
 
     .segmented-control {
-      display: flex; background: #F1F5F9; border-radius: 10px; padding: 3px; border: 1px solid var(--border);
+      display: flex; background: rgba(118, 118, 128, 0.12); border-radius: 9px; padding: 2px;
     }
     .segment {
-      flex: 1; text-align: center; padding: 8px 0; font-size: 0.85rem; font-weight: 600;
-      color: var(--text-sub); border-radius: 8px; cursor: pointer; transition: 0.2s;
+      flex: 1; text-align: center; padding: 7px 0; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-main); border-radius: 7px; cursor: pointer; transition: 0.2s;
     }
-    .segment.active { background: var(--bg-card); color: var(--primary); box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+    .segment.active { background: var(--bg-card); color: var(--text-main); box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04); }
 
     .container { max-width: 720px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -59,88 +67,71 @@
       border: 1px solid var(--border); box-shadow: var(--shadow);
     }
 
-    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-sub); margin-bottom: 8px; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-sub); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
 
     input, select {
       width: 100%; height: 46px; padding: 0 14px; font-size: 1rem;
-      border: 1px solid var(--border); border-radius: 10px;
-      background: #F9FAFB; color: var(--text-main); outline: none; margin-bottom: 16px;
-      -webkit-appearance: none; appearance: none;
+      border: 1px solid var(--border); border-radius: 12px;
+      background: var(--bg-app); color: var(--text-main); outline: none; margin-bottom: 16px;
+      -webkit-appearance: none; appearance: none; transition: 0.2s;
     }
-    input:focus, select:focus { border-color: var(--primary); background: #FFFFFF; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    input:focus, select:focus { border-color: var(--primary); background: #FFFFFF; }
 
     .btn {
-      width: 100%; height: 46px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 600;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; height: 46px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.15s;
     }
-    .btn:active { opacity: 0.8; transform: scale(0.98); }
+    .btn:active { opacity: 0.7; transform: scale(0.97); }
     .btn-primary { background: var(--primary); color: #FFFFFF; }
     .btn-dark { background: var(--dark-accent); color: #FFFFFF; }
     .btn-success { background: var(--success); color: #FFFFFF; }
-    .btn-outline { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
-    .btn-sm { height: 36px; font-size: 0.85rem; padding: 0 16px; width: auto; border-radius: 8px; }
+    .btn-outline { background: transparent; color: var(--primary); border: 1px solid rgba(0, 122, 255, 0.3); }
+    .btn-sm { height: 34px; font-size: 0.85rem; padding: 0 14px; width: auto; border-radius: 8px; }
     .btn-icon { width: 46px; height: 46px; padding: 0; font-size: 1.2rem; }
 
-    /* Estrutura das Caixas de Categoria */
     .category-box {
-      background: var(--bg-card);
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border);
+      box-shadow: var(--shadow); overflow: hidden;
     }
     .category-header {
-      background: #F8FAFC;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 700;
-      color: var(--dark-accent);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: rgba(243, 244, 246, 0.5); padding: 14px 18px; border-bottom: 1px solid var(--border);
+      font-weight: 700; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;
     }
     .category-count {
-      background: var(--border);
-      color: var(--text-sub);
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 99px;
+      background: rgba(118, 118, 128, 0.12); color: var(--text-main); font-size: 0.8rem;
+      padding: 2px 10px; border-radius: 99px; font-weight: 600;
     }
-    .category-content {
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Itens dentro da categoria */
     .item-row {
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;
     }
     .item-row:last-child { border-bottom: none; }
     
     .item-info { flex: 1; }
-    .item-title { font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+    .item-title { font-size: 1.05rem; font-weight: 600; color: var(--text-main); margin-bottom: 4px; letter-spacing: -0.3px; }
     .item-meta { font-size: 0.85rem; color: var(--text-sub); }
-    .item-meta strong { color: var(--dark-accent); }
-
+    .item-meta strong { color: var(--text-main); font-weight: 500; }
     .item-actions { display: flex; gap: 8px; }
 
-    /* Modal Genérico */
+    /* Novo visual sofisticado para os Modais */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 100;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.25); z-index: 100;
       display: none; align-items: center; justify-content: center; padding: 20px;
-      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      opacity: 0; transition: opacity 0.2s ease;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active { display: flex; opacity: 1; }
     .modal-content {
-      background: var(--bg-card); width: 100%; max-width: 380px;
-      border-radius: 20px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.95); width: 100%; max-width: 340px;
+      border-radius: 20px; padding: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      transform: scale(0.95); transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--dark-accent); }
+    .modal-overlay.active .modal-content { transform: scale(1); }
+    
+    .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: var(--text-main); text-align: center; letter-spacing: -0.5px; }
     .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+    /* Modal de Input de Texto sobreposto (z-index maior) */
+    #modalTexto { z-index: 150; }
 
     /* Lista de Categorias no Modal */
     .cat-list-modal {
@@ -148,14 +139,15 @@
     }
     .cat-item-modal {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; background: var(--bg-app); border-radius: 12px;
     }
+    .cat-item-modal span { font-weight: 600; font-size: 1rem; color: var(--text-main); }
 
     #toast {
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-      background: var(--dark-accent); color: #FFFFFF; padding: 14px 24px;
-      border-radius: 99px; font-size: 0.9rem; font-weight: 600; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 300;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); white-space: nowrap;
+      background: rgba(30, 30, 30, 0.95); color: #FFFFFF; padding: 14px 24px;
+      border-radius: 99px; font-size: 0.95rem; font-weight: 600; transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 300;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); white-space: nowrap; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
     
@@ -166,7 +158,7 @@
 
   <header>
     <div style="max-width: 720px; margin: 0 auto;">
-      <div class="header-title">📦 Inventário Wilson</div>
+      <div class="header-title">Inventário Wilson</div>
       <div class="segmented-control">
         <div class="segment active" id="tab-casa" onclick="mudarAba('casa')">Em Casa</div>
         <div class="segment" id="tab-fora" onclick="mudarAba('fora')">Emprestados</div>
@@ -186,11 +178,11 @@
         <select id="selectCategoria" style="flex: 1;">
           <option value="" disabled selected>Selecione ou crie...</option>
         </select>
-        <button class="btn btn-outline" style="width: auto; padding: 0 14px; height: 46px;" onclick="criarNovaCategoria()" title="Criar Nova">+ Criar</button>
-        <button class="btn btn-outline btn-icon" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias">⚙️</button>
+        <button class="btn btn-outline" style="width: auto; padding: 0 16px; height: 46px; border: none; background: rgba(0, 122, 255, 0.1);" onclick="criarNovaCategoria()" title="Criar Nova">+ Criar</button>
+        <button class="btn btn-outline btn-icon" style="border: none; background: rgba(0, 122, 255, 0.1);" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias">⚙️</button>
       </div>
       
-      <button class="btn btn-dark" onclick="adicionarItem()">Adicionar ao Acervo</button>
+      <button class="btn btn-primary" onclick="adicionarItem()">Adicionar ao Acervo</button>
     </div>
 
     <!-- Área onde as categorias e itens serão renderizados -->
@@ -210,7 +202,7 @@
       <input type="date" id="empData" />
       
       <div class="modal-actions">
-        <button class="btn btn-outline" onclick="fecharModalEmprestar()">Cancelar</button>
+        <button class="btn btn-outline" style="border-color: var(--border); color: var(--text-main);" onclick="fecharModalEmprestar()">Cancelar</button>
         <button class="btn btn-primary" onclick="confirmarEmprestimo()">Registrar Saída</button>
       </div>
     </div>
@@ -220,29 +212,36 @@
   <div class="modal-overlay" id="modalCategorias">
     <div class="modal-content">
       <div class="modal-title">Gerenciar Categorias</div>
-      
-      <div class="cat-list-modal" id="listaCategoriasModal">
-        <!-- Renderizado via JS -->
+      <div class="cat-list-modal" id="listaCategoriasModal"></div>
+      <button class="btn btn-primary" onclick="fecharModalGerenciarCategorias()">Concluído</button>
+    </div>
+  </div>
+
+  <!-- NOVO: Modal Customizado para Texto (Substitui o prompt feio) -->
+  <div class="modal-overlay" id="modalTexto">
+    <div class="modal-content">
+      <div class="modal-title" id="modalTextoTitulo">Título</div>
+      <input type="text" id="modalTextoInput" autocomplete="off" />
+      <div class="modal-actions">
+        <button class="btn btn-outline" style="border-color: var(--border); color: var(--text-main);" onclick="fecharModalTexto()">Cancelar</button>
+        <button class="btn btn-primary" onclick="confirmarModalTexto()">Salvar</button>
       </div>
-      
-      <button class="btn btn-dark" onclick="fecharModalGerenciarCategorias()">Pronto</button>
     </div>
   </div>
 
   <div id="toast">Ação concluída!</div>
 
   <script>
-    const STORAGE_ITENS = 'acervo_itens_v3';
-    const STORAGE_CATS = 'acervo_categorias_v3';
+    const STORAGE_ITENS = 'acervo_itens_v4';
+    const STORAGE_CATS = 'acervo_categorias_v4';
     
-    // Inicia com 'Geral' se não houver categorias
     let inventario = JSON.parse(localStorage.getItem(STORAGE_ITENS)) || [];
     let categorias = JSON.parse(localStorage.getItem(STORAGE_CATS)) || ['Geral'];
-    
     if (categorias.length === 0) categorias = ['Geral'];
 
     let abaAtual = 'casa';
     let itemEmEdicao = null;
+    let modalTextoCallback = null;
 
     document.getElementById('empData').value = new Date().toISOString().split('T')[0];
 
@@ -262,28 +261,48 @@
         select.innerHTML += `<option value="${cat}">${cat}</option>`;
       });
       
-      if (categorias.includes(valAtual)) {
-        select.value = valAtual;
-      } else if (categorias.length > 0) {
-        select.value = categorias[0];
-      }
+      if (categorias.includes(valAtual)) select.value = valAtual;
+      else if (categorias.length > 0) select.value = categorias[0];
     }
 
-    /* ---- FUNÇÕES DE CATEGORIA (CRIAR, EDITAR, EXCLUIR) ---- */
-    
+    /* ---- LÓGICA DO NOVO MODAL DE TEXTO (SUBSTITUI PROMPT) ---- */
+    function abrirModalTexto(titulo, placeholder, valorAtual, callback) {
+      document.getElementById('modalTextoTitulo').textContent = titulo;
+      const input = document.getElementById('modalTextoInput');
+      input.placeholder = placeholder;
+      input.value = valorAtual || '';
+      modalTextoCallback = callback;
+      
+      document.getElementById('modalTexto').classList.add('active');
+      setTimeout(() => input.focus(), 100);
+    }
+
+    function fecharModalTexto() {
+      document.getElementById('modalTexto').classList.remove('active');
+      modalTextoCallback = null;
+    }
+
+    function confirmarModalTexto() {
+      const valor = document.getElementById('modalTextoInput').value;
+      if (modalTextoCallback) modalTextoCallback(valor);
+      fecharModalTexto();
+    }
+
+    /* ---- CATEGORIAS ---- */
     function criarNovaCategoria() {
-      const nova = prompt('Digite o nome da nova categoria:');
-      if (nova && nova.trim() !== '') {
-        const nomeFormatado = nova.trim();
-        if (!categorias.includes(nomeFormatado)) {
-          categorias.push(nomeFormatado);
-          salvarDados();
-          document.getElementById('selectCategoria').value = nomeFormatado;
-          mostrarToast('📁 Categoria criada!');
-        } else {
-          mostrarToast('⚠️ Esta categoria já existe.');
+      abrirModalTexto('Nova Categoria', 'Nome da categoria', '', (nova) => {
+        if (nova && nova.trim() !== '') {
+          const nomeFormatado = nova.trim();
+          if (!categorias.includes(nomeFormatado)) {
+            categorias.push(nomeFormatado);
+            salvarDados();
+            document.getElementById('selectCategoria').value = nomeFormatado;
+            mostrarToast('📁 Categoria criada!');
+          } else {
+            mostrarToast('⚠️ Esta categoria já existe.');
+          }
         }
-      }
+      });
     }
 
     function abrirModalGerenciarCategorias() {
@@ -299,10 +318,10 @@
       const container = document.getElementById('listaCategoriasModal');
       container.innerHTML = categorias.map((cat, index) => `
         <div class="cat-item-modal">
-          <span style="font-weight: 600; font-size: 0.95rem; color: var(--text-main);">${cat}</span>
-          <div style="display: flex; gap: 6px;">
-            <button class="btn btn-outline btn-sm" onclick="editarCategoria(${index})" title="Renomear">✏️</button>
-            <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--border);" onclick="excluirCategoria(${index})" title="Excluir">🗑️</button>
+          <span>${cat}</span>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline btn-sm" style="border:none; background:rgba(0,122,255,0.1);" onclick="editarCategoria(${index})" title="Renomear">✏️</button>
+            <button class="btn btn-outline btn-sm" style="border:none; color:var(--danger); background:rgba(255,59,48,0.1);" onclick="excluirCategoria(${index})" title="Excluir">🗑️</button>
           </div>
         </div>
       `).join('');
@@ -310,77 +329,46 @@
 
     function editarCategoria(index) {
       const catAntiga = categorias[index];
-      const nova = prompt(`Renomear categoria "${catAntiga}" para:`, catAntiga);
-      
-      if (nova && nova.trim() !== '' && nova.trim() !== catAntiga) {
-        const novaFormatada = nova.trim();
-        
-        if (categorias.includes(novaFormatada)) {
-          mostrarToast('⚠️ Uma categoria com esse nome já existe!');
-          return;
-        }
-
-        // Atualiza o nome da categoria no array
-        categorias[index] = novaFormatada;
-        
-        // Atualiza o nome da categoria em todos os itens que pertenciam a ela
-        inventario.forEach(item => {
-          if (item.categoria === catAntiga) {
-            item.categoria = novaFormatada;
+      abrirModalTexto('Renomear Categoria', 'Novo nome', catAntiga, (nova) => {
+        if (nova && nova.trim() !== '' && nova.trim() !== catAntiga) {
+          const novaFormatada = nova.trim();
+          if (categorias.includes(novaFormatada)) {
+            mostrarToast('⚠️ Uma categoria com esse nome já existe!');
+            return;
           }
-        });
-
-        salvarDados();
-        renderizarListaCategoriasModal(); // Atualiza modal
-        mostrarToast('✏️ Categoria renomeada!');
-      }
+          categorias[index] = novaFormatada;
+          inventario.forEach(item => { if (item.categoria === catAntiga) item.categoria = novaFormatada; });
+          salvarDados();
+          renderizarListaCategoriasModal();
+          mostrarToast('✏️ Categoria renomeada!');
+        }
+      });
     }
 
     function excluirCategoria(index) {
       const cat = categorias[index];
-      
       if (cat === 'Geral') {
-        mostrarToast('⚠️ A categoria "Geral" é padrão e não pode ser excluída.');
+        mostrarToast('⚠️ A categoria "Geral" não pode ser excluída.');
         return;
       }
-
-      if (confirm(`Tem certeza que deseja excluir a categoria "${cat}"?\n\n(Os itens que estão nela serão movidos para "Geral")`)) {
+      if (confirm(`Excluir a categoria "${cat}"?\nOs itens nela irão para "Geral".`)) {
         categorias.splice(index, 1);
-        
-        // Garante que 'Geral' exista
-        if (!categorias.includes('Geral')) {
-          categorias.unshift('Geral');
-        }
-
-        // Move os itens para Geral
-        inventario.forEach(item => {
-          if (item.categoria === cat) {
-            item.categoria = 'Geral';
-          }
-        });
-
+        if (!categorias.includes('Geral')) categorias.unshift('Geral');
+        inventario.forEach(item => { if (item.categoria === cat) item.categoria = 'Geral'; });
         salvarDados();
         renderizarListaCategoriasModal();
         mostrarToast('🗑️ Categoria excluída!');
       }
     }
 
-    /* ---- FUNÇÕES DOS ITENS (ACERVO) ---- */
-
+    /* ---- ITENS ---- */
     function adicionarItem() {
       const nome = document.getElementById('novoItemNome').value.trim();
       const cat = document.getElementById('selectCategoria').value;
-      
       if (!nome) { mostrarToast('⚠️ Digite o nome do item'); return; }
       if (!cat) { mostrarToast('⚠️ Selecione ou crie uma categoria'); return; }
 
-      inventario.unshift({
-        id: Date.now().toString(),
-        nome: nome,
-        categoria: cat,
-        status: 'casa'
-      });
-
+      inventario.unshift({ id: Date.now().toString(), nome: nome, categoria: cat, status: 'casa' });
       document.getElementById('novoItemNome').value = '';
       salvarDados();
       mostrarToast('✅ Item adicionado!');
@@ -397,19 +385,16 @@
     function renderizarInterface() {
       const area = document.getElementById('areaAcervo');
       area.innerHTML = '';
-
       const itensFiltrados = inventario.filter(i => i.status === abaAtual);
 
       if (itensFiltrados.length === 0) {
-        area.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding: 40px 0; font-weight: 500;">Nenhum item encontrado.</p>`;
+        area.innerHTML = `<p style="text-align:center; color:var(--text-sub); padding: 40px 0; font-weight: 500;">Nenhum item por aqui.</p>`;
         return;
       }
 
-      // Se a aba for "Em Casa", renderiza no formato de Caixas por Categoria
       if (abaAtual === 'casa') {
         categorias.forEach(cat => {
           const itensDaCategoria = itensFiltrados.filter(i => i.categoria === cat);
-          
           if (itensDaCategoria.length > 0) {
             let htmlCaixa = `
               <div class="category-box">
@@ -419,39 +404,29 @@
                 </div>
                 <div class="category-content">
             `;
-
             itensDaCategoria.forEach(item => {
               htmlCaixa += `
                 <div class="item-row">
-                  <div class="item-info">
-                    <div class="item-title">${item.nome}</div>
-                  </div>
+                  <div class="item-info"><div class="item-title">${item.nome}</div></div>
                   <div class="item-actions">
-                    <button class="btn btn-outline btn-sm" style="color:var(--danger); border-color:var(--border);" onclick="apagarItem('${item.id}')">Excluir</button>
-                    <button class="btn btn-primary btn-sm" onclick="abrirModalEmprestar('${item.id}')">Emprestar</button>
+                    <button class="btn btn-outline btn-sm" style="border:none; color:var(--danger); background:rgba(255,59,48,0.1);" onclick="apagarItem('${item.id}')">Excluir</button>
+                    <button class="btn btn-outline btn-sm" style="border:none; color:var(--primary); background:rgba(0,122,255,0.1);" onclick="abrirModalEmprestar('${item.id}')">Emprestar</button>
                   </div>
                 </div>
               `;
             });
-
             htmlCaixa += `</div></div>`;
             area.innerHTML += htmlCaixa;
           }
         });
-      } 
-      // Se a aba for "Emprestados", renderiza uma lista focada em quem está com o item
-      else {
+      } else {
         let htmlEmprestados = `<div class="category-box"><div class="category-content">`;
-        
         itensFiltrados.forEach(item => {
           htmlEmprestados += `
             <div class="item-row">
               <div class="item-info">
                 <div class="item-title">${item.nome} <span style="font-size:0.75rem; color:var(--text-sub); font-weight:normal;">(${item.categoria})</span></div>
-                <div class="item-meta">
-                  Com: <strong>${item.emprestadoPara}</strong> <br/>
-                  Saiu: ${formatarData(item.dataSaida)}
-                </div>
+                <div class="item-meta">Com: <strong>${item.emprestadoPara}</strong> <br/>Saiu: ${formatarData(item.dataSaida)}</div>
               </div>
               <div class="item-actions">
                 <button class="btn btn-success btn-sm" onclick="receberItem('${item.id}')">Devolvido</button>
@@ -459,7 +434,6 @@
             </div>
           `;
         });
-        
         htmlEmprestados += `</div></div>`;
         area.innerHTML = htmlEmprestados;
       }
@@ -479,52 +453,39 @@
     function confirmarEmprestimo() {
       const pessoa = document.getElementById('empNome').value.trim();
       const data = document.getElementById('empData').value;
-
       if (!pessoa || !data) { mostrarToast('⚠️ Preencha nome e data'); return; }
 
       const item = inventario.find(i => i.id === itemEmEdicao);
       if (item) {
-        item.status = 'fora';
-        item.emprestadoPara = pessoa;
-        item.dataSaida = data;
-        
-        salvarDados();
-        fecharModalEmprestar();
-        mostrarToast('📤 Item emprestado!');
+        item.status = 'fora'; item.emprestadoPara = pessoa; item.dataSaida = data;
+        salvarDados(); fecharModalEmprestar(); mostrarToast('📤 Item emprestado!');
       }
     }
 
     function receberItem(id) {
       const item = inventario.find(i => i.id === id);
       if (item) {
-        item.status = 'casa';
-        delete item.emprestadoPara;
-        delete item.dataSaida;
-        salvarDados();
-        mostrarToast('📥 Item guardado em casa');
+        item.status = 'casa'; delete item.emprestadoPara; delete item.dataSaida;
+        salvarDados(); mostrarToast('📥 Item guardado em casa');
       }
     }
 
     function apagarItem(id) {
-      if(confirm('Apagar este item definitivamente do inventário?')) {
+      if(confirm('Apagar este item definitivamente?')) {
         inventario = inventario.filter(i => i.id !== id);
-        salvarDados();
-        mostrarToast('🗑️ Item removido');
+        salvarDados(); mostrarToast('🗑️ Removido');
       }
     }
 
     function formatarData(dataIso) {
-      if (!dataIso) return '';
-      const [a, m, d] = dataIso.split('-');
-      return `${d}/${m}/${a}`;
+      if (!dataIso) return ''; const [a, m, d] = dataIso.split('-'); return `${d}/${m}/${a}`;
     }
 
     let toastT;
     function mostrarToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg; t.classList.add('show');
-      clearTimeout(toastT);
-      toastT = setTimeout(() => t.classList.remove('show'), 2500);
+      clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2500);
     }
 
     atualizarSelectCategorias();
